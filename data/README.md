@@ -1,1 +1,1 @@
-This folder contains csvused for the AQI project.
+This folder contains csv used in the AQI project.
