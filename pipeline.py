@@ -134,7 +134,7 @@ def engineer_features(df):
 def upload_to_hopsworks_online(df: pd.DataFrame):
     print("Uploading to Hopsworks...")
 
-    project = hopsworks.login(project=PROJECT_NAME, api_key_value=API_KEY)
+    project = hopsworks.login(api_key_value=API_KEY, project=PROJECT_NAME)
     fs = project.get_feature_store()
     aqi_fg_online_v2 = fs.get_feature_group("aqi_features_engineered", version=2)
 
