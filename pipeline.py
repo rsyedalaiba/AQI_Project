@@ -9,7 +9,6 @@ import hopsworks
 from sklearn.preprocessing import PowerTransformer
 
 # CONFIGURATION
-
 LAT, LON = 24.8607, 67.0011  # Karachi, Pakistan
 TIMEZONE = "auto"
 
@@ -18,9 +17,8 @@ PROJECT_NAME = os.getenv("HOPSWORKS_PROJECT")
 API_KEY = os.getenv("HOPSWORKS_API_KEY")
 
 # FETCH FUNCTION
-
 def fetch_data():
-    """Fetch AQI and weather data for the last 3 days."""
+    """Fetch AQI and weather data for the last 3 days, filtered to full-day 23:00 hours."""
     TODAY = datetime.utcnow().date()
     START_DATE = (TODAY - timedelta(days=3)).strftime('%Y-%m-%d')
     END_DATE = TODAY.strftime('%Y-%m-%d')
@@ -77,11 +75,23 @@ def fetch_data():
     combined_df = pd.merge(aqi_df, weather_df, on="time", how="inner")
     combined_df.sort_values(by="time", inplace=True)
 
-    print(f"Combined records: {len(combined_df)}")
+    # --- Filter incomplete last day hours (keep data until previous day's 23:00) ---
+    latest_time = combined_df["time"].max()
+    print(f"Latest available record: {latest_time}")
+
+    # If latest hour < 23:00, drop partial last day
+    if latest_time.hour < 23:
+        cutoff_date = (latest_time - timedelta(days=1)).replace(hour=23, minute=0, second=0, microsecond=0)
+        combined_df = combined_df[combined_df["time"] <= cutoff_date]
+        print(f"Filtered to full-day data ending at {cutoff_date}")
+    else:
+        print("Data already complete up to 23:00 — no filtering applied.")
+
+    print(f"Final records after filtering: {len(combined_df)}")
     return combined_df
 
-# CLEAN FUNCTION
 
+# CLEAN FUNCTION
 def clean_data(df):
     df = df.drop_duplicates().sort_values("time")
     df.fillna(method="ffill", inplace=True)
@@ -89,8 +99,8 @@ def clean_data(df):
     print("Cleaned data.")
     return df
 
-# TRANSFORMATION FUNCTION
 
+# TRANSFORMATION FUNCTION
 def transform_data(df):
     numeric_cols = df.select_dtypes(include=["float64", "int64"]).columns
     pt = PowerTransformer(method="yeo-johnson")
@@ -98,8 +108,8 @@ def transform_data(df):
     print("Transformed data (normalized).")
     return df
 
-# FEATURE ENGINEERING FUNCTION
 
+# FEATURE ENGINEERING FUNCTION
 def engineer_features(df):
     df["day"] = df["time"].dt.day
     df["month"] = df["time"].dt.month
@@ -119,21 +129,18 @@ def engineer_features(df):
     print("Engineered 15 key features.")
     return df
 
-# UPLOAD TO HOPSWORKS (NO DUPLICATES)
 
+# UPLOAD FUNCTION (HOPSWORKS)
 def upload_to_hopsworks_online(df: pd.DataFrame):
     print("Uploading to Hopsworks...")
 
-    # Login to Hopsworks
     project = hopsworks.login(project=PROJECT_NAME, api_key_value=API_KEY)
     fs = project.get_feature_store()
     aqi_fg_online_v2 = fs.get_feature_group("aqi_features_engineered", version=2)
 
-    # Convert datetime to UNIX timestamp (integer)
     df['time'] = pd.to_datetime(df['time'])
     df['time'] = df['time'].astype('int64') // 10**9
 
-    # Select columns for upload
     online_features = [
         'pm10', 'pm2_5', 'us_aqi', 'day', 'month', 'year',
         'day_of_week', 'temp_roll24', 'humidity_roll24', 'wind_roll24',
@@ -142,7 +149,6 @@ def upload_to_hopsworks_online(df: pd.DataFrame):
     ]
     upload_df = df[['time'] + online_features]
 
-    # Read existing records (latest snapshot)
     try:
         existing = aqi_fg_online_v2.read()
         existing_times = set(existing['time'].astype(int))
@@ -151,7 +157,6 @@ def upload_to_hopsworks_online(df: pd.DataFrame):
         existing_times = set()
         print("No existing records found — creating new dataset.")
 
-    # Filter out duplicates
     new_df = upload_df[~upload_df['time'].isin(existing_times)]
 
     if not new_df.empty:
@@ -161,8 +166,7 @@ def upload_to_hopsworks_online(df: pd.DataFrame):
         print("No new records to upload — all data already exists.")
 
 
-# MAIN PIPELINE
-
+# MAIN
 def main():
     df = fetch_data()
     df = clean_data(df)
@@ -171,7 +175,7 @@ def main():
     upload_to_hopsworks_online(df)
     print("Daily AQI pipeline completed successfully!")
 
-# ENTRY POINT
 
+# ENTRY POINT
 if __name__ == "__main__":
     main()
