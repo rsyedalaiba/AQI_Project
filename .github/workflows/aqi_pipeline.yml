@@ -39,7 +39,7 @@ jobs:
 
       - name: Run pipeline (capture log)
         run: |
-          python aqi_pipeline.py 2>&1 | tee pipeline.log
+          python pipeline.py 2>&1 | tee pipeline.log
 
       - name: Upload pipeline log
         if: always()
