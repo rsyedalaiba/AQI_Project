@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
 """AQI_CODE.ipynb
 
-Author: Syeda Laiba Rehman
-Institution: Bahria University, Karachi Campus
-Project: Air Quality Index (AQI) Prediction System
+**Author:** Syeda Laiba Rehman
+**Project:** Air Quality Index (AQI) Prediction System
 
-Description:
+**Description:**
     This script automates the complete AQI data pipeline for Karachi city,
     covering the following stages:
     1. Folder and data structure creation.
@@ -16,7 +15,7 @@ Description:
     6. Feature engineering (time, rolling, lag, rate, and ratio-based features).
     7. Feature correlation analysis for AQI prediction targets (24h, 48h, 72h).
     8. Data export for model training and deployment on Hopsworks.
-Notes:
+**Notes:**
     This file forms the first part of the AQI prediction project pipeline,
     which integrates with Streamlit and Flask-based dashboards for visualization.
 
