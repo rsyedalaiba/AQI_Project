@@ -2,6 +2,7 @@
 """APP.ipynb
 
 **Author:** Syeda Laiba Rehman
+**Project:** Air Quality Index (AQI) Prediction System
 
 **🌫️ Live AQI Dashboard**
 Streamlit web application for real-time Air Quality Index predictions
