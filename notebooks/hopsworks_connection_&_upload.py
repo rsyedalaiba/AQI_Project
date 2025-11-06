@@ -1,5 +1,16 @@
 # -*- coding: utf-8 -*-
 """Hopsworks.ipynb
+------------------
+This notebook connects to the Hopsworks Feature Store,
+creates feature groups (offline & online), and uploads AQI data.
+
+Sections:
+- Import Libraries
+- Connect to Hopsworks
+- Create Feature Groups
+- Upload Data
+- Read & Verify Records
+"""
 
 **IMPORT LIBRARIES**
 """
@@ -84,7 +95,7 @@ df['time'] = pd.to_datetime(df['time'])
 features_df = df.drop(columns=['target_aqi_24h', 'target_aqi_48h', 'target_aqi_72h'])
 
 aqi_fg.insert(features_df)
-print("✅ CSV uploaded successfully to Hopsworks Feature Store!")
+print(" CSV uploaded successfully to Hopsworks Feature Store!")
 
 """**ONLINE FEATURE GROUP**"""
 
