@@ -13,6 +13,9 @@
     • A personal API key generated from Hopsworks:
         → Go to your Hopsworks project → Settings → API keys → Create API key.
         → Copy and save it securely.
+**How to use:**
+    import hopsworks
+    project = hopsworks.login(api_key_value="YOUR_API_KEY_HERE")
         
 **Sections:**
 - Import Libraries
@@ -38,7 +41,7 @@
 import hopsworks
 
 # Connect to Hopsworks
-project = hopsworks.login()
+project = hopsworks.login(api_key_value="YOUR_API_KEY_HERE")
 fs = project.get_feature_store()
 
 print("Connected to Hopsworks project:", project.name)
