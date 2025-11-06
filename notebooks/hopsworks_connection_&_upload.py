@@ -1,9 +1,19 @@
 # -*- coding: utf-8 -*-
 """Hopsworks.ipynb
 ------------------
-This notebook connects to the Hopsworks Feature Store,
-creates feature groups (offline & online), and uploads AQI data.
+**Author:** Syeda Laiba Rehman
+**Project:** Air Quality Index (AQI) Prediction System
 
+**Description:**
+    This notebook connects to Hopsworks Feature Store for creating, uploading and retrieving
+    engineered datasets used in AQI prediction.
+
+**Requirements:**
+    • A valid Hopsworks account (https://app.hopsworks.ai/)
+    • A personal API key generated from Hopsworks:
+        → Go to your Hopsworks project → Settings → API keys → Create API key.
+        → Copy and save it securely.
+        
 **Sections:**
 - Import Libraries
 - Connect to Hopsworks
