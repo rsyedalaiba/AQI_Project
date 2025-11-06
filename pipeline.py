@@ -130,7 +130,6 @@ def engineer_features(df):
     return df
 
 
-# UPLOAD FUNCTION (HOPSWORKS)
 def upload_to_hopsworks_online(df: pd.DataFrame):
     print("Uploading to Hopsworks...")
 
@@ -138,8 +137,20 @@ def upload_to_hopsworks_online(df: pd.DataFrame):
     fs = project.get_feature_store()
     aqi_fg_online_v2 = fs.get_feature_group("aqi_features_engineered", version=2)
 
+    # --- Convert time to Unix ---
     df['time'] = pd.to_datetime(df['time'])
     df['time'] = df['time'].astype('int64') // 10**9
+
+    # --- Ensure correct dtypes for Hopsworks schema ---
+    int_columns = ['day', 'month', 'year', 'day_of_week']
+    for col in int_columns:
+        if col in df.columns:
+            df[col] = df[col].astype('int64')
+
+    # --- Optional: print dtype check for debugging ---
+    print("\n Dtypes before upload:")
+    print(df[int_columns + ['time']].dtypes)
+    print("-" * 60)
 
     online_features = [
         'pm10', 'pm2_5', 'us_aqi', 'day', 'month', 'year',
@@ -164,7 +175,6 @@ def upload_to_hopsworks_online(df: pd.DataFrame):
         print(f"{len(new_df)} new records uploaded successfully!")
     else:
         print("No new records to upload — all data already exists.")
-
 
 # MAIN
 def main():
