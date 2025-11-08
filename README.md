@@ -1,34 +1,70 @@
 # AQI_Project
-This repository contains a project for predicting Air Quality Index (AQI) using machine learning.<br><br>
-## Project Overview
 
-- **Goal**: Build a model to predict AQI levels based on atmospheric and environmental features (e.g., pollutant concentrations, meteorological data).  
-- **Key Components**:  
-  - Data ingestion & cleaning  
-  - Feature engineering & selection  
-  - Model training & evaluation  
-  - Web application interface for live predictions
+## Overview
+This project predicts hourly AQI (Air Quality Index) values for the next 72 hours using multiple machine learning models and an automated pipeline.
 
-## How to Use This Project (Overview)
+Key components of the system include:  
 
-This project predicts Air Quality Index (AQI) using machine learning models. Here’s a high-level view of how it works:
+- Machine learning models (Random Forest, XGBoost, LightGBM) for AQI prediction  
+- Hopsworks Feature Store for historical and real-time data management  
+- GitHub Actions for CI/CD automation  
+- Streamlit frontend for visualization and interactive dashboards  
 
-1. **Data Preparation**  
-   - Raw air quality and weather data are processed and cleaned.  
-   - Features like rolling averages, lag values, and temporal indicators are generated.
+## System Architecture
 
-2. **Model Training & Evaluation**  
-   - The pipeline trains machine learning models to predict AQI.  
-   - Model performance is evaluated using metrics such as R² and RMSE.  
-   - SHAP plots are generated to explain predictions.
+### Data Source & Feature Store (Hopsworks)
+- Historical AQI and weather features (PM2.5, PM10, temperature, humidity, rainfall, wind speed, etc.) are stored in Hopsworks.  
+- Automated scripts fetch the latest features before each prediction.  
+- Version-controlled datasets ensure reproducibility and consistency.
 
-3. **Making Predictions**  
-   - Pre-trained models are saved in the `models/` folder.  
-   - Users can input recent air quality and weather data to get AQI forecasts.  
-   - Reverse transformations are applied if needed to get predictions in original scale.
+### Model Training & Forecasting
+- Ensemble ML algorithms used:
+  - **Random Forest (RF)**
+  - **XGBoost (XGB)**
+  - **LightGBM (LGBM)**
+- Models predict hourly AQI for the next 3 days.  
 
-4. **Optional Web Interface**  
-   - A Flask / Streamlit app can be run locally for a simple dashboard.  
-   - Users can view predicted AQI for the next few days and explore trends visually.
+### CI/CD Automation (GitHub Actions)  
+**Pipeline steps:**
+- Fetch new data from APIs  
+- Clean, Trasnform and perform Feature Engineering  
+- Save new data to hopsworks. This new data is then used for predictions
 
-> **Note:** The project requires Python 3.12.12 or later. To fetch live data from Hopsworks or other APIs, you must create your own API key. The pipeline will not run fully without it.
+### Streamlit Frontend
+- Displays 3-day hourly AQI predictions with:  
+- Color-coded categories for AQI levels  
+- Trend graphs using Plotly  
+- Daily health recommendations  
+
+### Observations
+- Models perform best for short-term forecasts.  
+- LightGBM performed the best with 96% R², providing high accuracy and generalization.  
+- XGBoost and Random Forest gives stable baseline predictions.  
+- Ensemble outputs deliver smoother and more reliable 3-day trends.  
+
+
+## Tech Stack
+
+**Frontend:** Streamlit, Plotly 
+**Backend:** Python, scikit-learn 
+**ML Models:** RandomForest, XGBoost, LightGBM 
+**Feature Store:** Hopsworks 
+**CI/CD:** GitHub Actions 
+**Explainability:** SHAP 
+**Visualization:** Plotly, Matplotlib 
+**Utilities:** Pandas, NumPy, python-dotenv 
+
+## Workflow Summary
+1. **Data Fetching:** Retrieve features from Hopsworks . 
+2. **Model Training:** Train RF, XGB, LGBM using AQI + weather features.  
+3. **Model Evaluation:** Compute R², MAE, RMSE for each model.
+4. **Model Selection:** Selects Best Model.
+5. **Automation:** Add new data in Hopsworks daily for predcition.
+6. **Dashboard:** Interactive 3-day AQI forecasts rendered using Streamlit and Plotly; ngrok is used to expose the local dashboard for remote access.  
+
+## Author
+**Syeda Laiba Rehman**  
+Bahria University, CS Department  
+Project: AQI Prediction & Forecasting
+
+> **Note:** To fetch live data from Hopsworks or other APIs, you must create your own API key. The pipeline will not run fully without it.
