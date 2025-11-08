@@ -71,9 +71,7 @@ pred_df.to_csv("AQI_Project/data/recent_predictions_24h.csv", index=False)
 
 """**FIRST PERFORMING INVERSE TRANSFORMATION TO GET REAL AQI VALUES (TESTING)**"""
 
-# ==============================
-# 📘 AQI Prediction with Inverse Transform
-# ==============================
+# AQI Prediction with Inverse Transform
 
 import pandas as pd
 import numpy as np
