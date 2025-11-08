@@ -27,7 +27,7 @@ Key components of the system include:
 ### CI/CD Automation (GitHub Actions)  
 **Pipeline steps:**
 - Fetch new data from APIs  
-- Clean, Trasnform and perform Feature Engineering  
+- Clean, TranSform and perform Feature Engineering  
 - Save new data to hopsworks. This new data is then used for predictions
 
 ### Streamlit Frontend
