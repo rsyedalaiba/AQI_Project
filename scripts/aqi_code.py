@@ -5,16 +5,16 @@
 **Project:** Air Quality Index (AQI) Prediction System
 
 **Description:**
-    This script automates the complete AQI data pipeline for Karachi city,
-    covering the following stages:
+    This script covers the complete AQI data pipeline for Karachi city:
     1. Folder and data structure creation.
     2. Fetching air quality and weather data using Open-Meteo APIs.
     3. Data cleaning, merging, and exploratory data analysis (EDA).
     4. Outlier detection and capping using the IQR method.
     5. Skewness correction using Yeo–Johnson transformation.
     6. Feature engineering (time, rolling, lag, rate, and ratio-based features).
-    7. Feature correlation analysis for AQI prediction targets (24h, 48h, 72h).
-    8. Data export for model training and deployment on Hopsworks.
+    7. Storing and Fetching data from Hopsworks.
+    8. Feature correlation analysis for AQI prediction targets (24h, 48h, 72h).
+    9. Data export for model training.
 **Notes:**
     This file forms the first part of the AQI prediction project pipeline,
     which integrates with Streamlit and Flask-based dashboards for visualization.
