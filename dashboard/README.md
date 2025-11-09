@@ -1,1 +1,1 @@
-This folder contains screenshots of the AQI Prediction Dashboard.  
+This folder includes all screenshots of AQI Prediction Dashboard to illustrate the interface and visual outputs. 
